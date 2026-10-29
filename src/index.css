@@ -42,6 +42,11 @@ html {
 }
 
 html,
+body,
+#root {
+  width: 100%;
+}
+
 /* Sleek Modern Dark Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -64,11 +69,6 @@ html,
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
-}
-
-body,
-#root {
-  width: 100%;
 }
 
 body {

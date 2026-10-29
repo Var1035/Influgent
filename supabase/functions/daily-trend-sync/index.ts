@@ -107,8 +107,8 @@ Deno.serve(async (req) => {
             }
           }
 
-          // Post directly to Supabase REST API
-          const dbRes = await fetch(`${SUPABASE_URL}/rest/v1/topics`, {
+          // Post directly to Supabase REST API (upsert on title)
+          const dbRes = await fetch(`${SUPABASE_URL}/rest/v1/topics?on_conflict=title`, {
             method: "POST",
             headers: {
               "apikey": SUPABASE_SERVICE_ROLE_KEY,

@@ -10,17 +10,22 @@ exception when others then
   null;
 end $$;
 
--- Schedule multi-trend-sync 5 times per day:
--- 6:00 AM, 11:00 AM, 3:00 PM (15:00), 6:00 PM (18:00), and 9:00 PM (21:00)
--- Extracts 100 breakout videos per run across 4 categories (500 videos/day)
+-- Schedule multi-trend-sync 5 times per day (UTC):
+-- 00:30 UTC (06:00 AM IST)
+-- 05:30 UTC (11:00 AM IST)
+-- 09:30 UTC (03:00 PM IST)
+-- 12:30 UTC (06:00 PM IST)
+-- 15:30 UTC (09:00 PM IST)
+-- Extracts breakout videos across 4 categories with real-time velocity metrics
 select cron.schedule(
   'multi-trend-sync-5x-daily',
-  '0 6,11,15,18,21 * * *',
+  '30 0,5,9,12,15 * * *',
   $$
   select net.http_post(
     url := 'https://unowbqmjwzofklnhbkbc.supabase.co/functions/v1/daily-trend-sync',
     headers := '{"Content-Type": "application/json"}'::jsonb,
-    body := '{}'::jsonb
+    body := '{}'::jsonb,
+    timeout_milliseconds := 30000
   );
   $$
 );

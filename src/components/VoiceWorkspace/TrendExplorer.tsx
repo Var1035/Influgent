@@ -70,6 +70,21 @@ function getNextSyncRunInfo(): NextRunInfo {
   };
 }
 
+export type SortMode = 'newest' | 'viral' | 'oldest';
+
+export function formatScrapedTime(isoString?: string): string {
+  if (!isoString) return '';
+  const date = new Date(isoString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
 export const TrendExplorer: React.FC<TrendExplorerProps> = ({
   trends,
   onSelectTopic,
@@ -91,6 +106,7 @@ export const TrendExplorer: React.FC<TrendExplorerProps> = ({
   const [selectedDays, setSelectedDays] = useState<number>(activeFreshnessDays);
   // Requirement 5 & 8: Toggle to include normal uploads from big channels (off by default)
   const [includeNormalUploads, setIncludeNormalUploads] = useState<boolean>(false);
+  const [sortMode, setSortMode] = useState<SortMode>('newest');
   const [nextRunInfo, setNextRunInfo] = useState<NextRunInfo>(getNextSyncRunInfo());
 
   const localRegions = selectedRegions && selectedRegions.length > 0 ? selectedRegions : ['IN', 'US'];
@@ -222,7 +238,21 @@ export const TrendExplorer: React.FC<TrendExplorerProps> = ({
       }
       return true;
     })
-    .sort((a, b) => (b.viralScore ?? b.momentumScore ?? 0) - (a.viralScore ?? a.momentumScore ?? 0));
+    .sort((a, b) => {
+      if (sortMode === 'newest') {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (timeB !== timeA) return timeB - timeA;
+        return (b.viralScore ?? b.momentumScore ?? 0) - (a.viralScore ?? a.momentumScore ?? 0);
+      }
+      if (sortMode === 'oldest') {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (timeA !== timeB) return timeA - timeB;
+        return (b.viralScore ?? b.momentumScore ?? 0) - (a.viralScore ?? a.momentumScore ?? 0);
+      }
+      return (b.viralScore ?? b.momentumScore ?? 0) - (a.viralScore ?? a.momentumScore ?? 0);
+    });
 
   return (
     <div className="trend-explorer-panel">
@@ -463,19 +493,36 @@ export const TrendExplorer: React.FC<TrendExplorerProps> = ({
           ))}
         </div>
 
-        {/* Big Channels Normal Uploads Toggle */}
-        <label
-          className="normal-uploads-toggle"
-          title="Toggle visibility of videos that match normal performance for big channels"
-        >
-          <input
-            type="checkbox"
-            checked={includeNormalUploads}
-            onChange={(e) => setIncludeNormalUploads(e.target.checked)}
-          />
-          <span className="toggle-switch"></span>
-          <span className="toggle-label">Include normal uploads from big channels</span>
-        </label>
+        <div className="filter-controls-right">
+          {/* Scraped Data Sort Selector */}
+          <div className="trend-sort-control" title="Sort order of displayed trends">
+            <i className="fa-solid fa-arrow-down-short-wide"></i>
+            <span className="sort-label">Sort:</span>
+            <select
+              value={sortMode}
+              onChange={(e) => setSortMode(e.target.value as SortMode)}
+              className="trend-sort-select"
+            >
+              <option value="newest">Latest Scraped First</option>
+              <option value="viral">Highest Viral Score</option>
+              <option value="oldest">First Scraped (Oldest)</option>
+            </select>
+          </div>
+
+          {/* Big Channels Normal Uploads Toggle */}
+          <label
+            className="normal-uploads-toggle"
+            title="Toggle visibility of videos that match normal performance for big channels"
+          >
+            <input
+              type="checkbox"
+              checked={includeNormalUploads}
+              onChange={(e) => setIncludeNormalUploads(e.target.checked)}
+            />
+            <span className="toggle-switch"></span>
+            <span className="toggle-label">Include normal uploads</span>
+          </label>
+        </div>
       </div>
 
       {/* In-view Location Filter (when multiple locations are active) */}
@@ -610,6 +657,14 @@ export const TrendExplorer: React.FC<TrendExplorerProps> = ({
                 <div className="trend-card-top">
                   <div className="trend-meta-left">
                     <span className="trend-category-tag">{topic.category}</span>
+                    {topic.createdAt && (
+                      <span
+                        className="trend-scraped-time"
+                        title={`Scraped & Ingested: ${new Date(topic.createdAt).toLocaleString()}`}
+                      >
+                        <i className="fa-regular fa-clock"></i> {formatScrapedTime(topic.createdAt)}
+                      </span>
+                    )}
                     {topic.regionCode && (
                       <span
                         className="trend-region-tag"

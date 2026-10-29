@@ -26,6 +26,7 @@ export interface TrendingTopic {
   videoUrl?: string;
   thumbnailUrl?: string;
   publishedAt?: string;
+  createdAt?: string;
   channelTitle?: string;
   channelId?: string;
   viralScore?: number;

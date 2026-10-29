@@ -1043,6 +1043,7 @@ Output detailed visual prompts, B-roll recommendations from Pexels, and exact pr
         }
 
         const { data, error } = await query
+          .order('created_at', { ascending: false })
           .order('viral_score', { ascending: false, nullsFirst: false })
           .order('momentum_score', { ascending: false });
 
@@ -1081,6 +1082,7 @@ Output detailed visual prompts, B-roll recommendations from Pexels, and exact pr
             isOutsiderBreakout: Boolean(row.is_outsider_breakout),
             confidence: row.confidence || 'standard',
             publishedAt: row.published_at || undefined,
+            createdAt: row.created_at || undefined,
           }));
 
           // Update local cache with complete database trends

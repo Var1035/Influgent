@@ -28,9 +28,12 @@ export const YOUTUBE_API_KEY =
 export const YOUTUBE_CATEGORY_MAP: Record<string, string> = {
   'Tech & AI': '28', // Science & Technology
   'Creator Economy': '24', // Entertainment / General
-  'Gaming': '20', // Gaming
-  'Fitness & Health': '17', // Sports
   'Productivity & Work': '27', // Education
+  'Finance & Investing': '25', // News/Finance
+  'Fitness & Health': '17', // Sports
+  'Gaming': '20', // Gaming
+  'Politics': '25', // News & Politics
+  'Movies': '1', // Film & Animation
 };
 
 export interface RegionOption {
@@ -430,7 +433,16 @@ export class YouTubeService {
    * Fetch most popular trending videos across multiple categories and regions
    */
   public async fetchMultiCategoryTrends(
-    categories: string[] = ['Tech & AI', 'Creator Economy', 'Gaming', 'Fitness & Health', 'Productivity & Work'],
+    categories: string[] = [
+      'Tech & AI',
+      'Creator Economy',
+      'Productivity & Work',
+      'Finance & Investing',
+      'Fitness & Health',
+      'Gaming',
+      'Politics',
+      'Movies',
+    ],
     regionInput: string | string[] = ['IN', 'US'],
     perCategoryLimit = 15
   ): Promise<TrendingTopic[]> {

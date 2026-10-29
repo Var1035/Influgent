@@ -27,6 +27,8 @@ const CATEGORIES = [
   'Finance & Investing',
   'Fitness & Health',
   'Gaming',
+  'Politics',
+  'Movies',
 ];
 
 interface NextRunInfo {

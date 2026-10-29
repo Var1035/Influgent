@@ -1,0 +1,21 @@
+{
+  "name": "influgent-stealth-teleprompter",
+  "version": "1.0.0",
+  "description": "Desktop floating transparent teleprompter invisible to screen sharing and recordings",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "teleprompter",
+    "stealth",
+    "screen-capture-protection",
+    "content-creator"
+  ],
+  "author": "Influgent",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.0.0"
+  }
+}
+

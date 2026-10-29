@@ -1,0 +1,14 @@
+[0:00 - 0:22] THE CREATOR PROBLEM
+Every content creator knows the struggle: you spend days scripting and filming, only for the algorithm to ignore your video. Most creators guess what is trending, copy huge channels, and read stiff scripts that sound robotic. That is why we built Influgent: your AI-powered viral momentum radar and recording studio.
+
+[0:22 - 0:45] DISCOVERING BREAKOUT TRENDS (5X DAILY AUTOMATION)
+Influgent begins in the Trend Explorer, which runs automatically five times a day to capture fresh breakouts as they happen. Instead of simply showing videos from massive celebrity channels, our algorithm benchmarks each upload against its channel's normal baseline, revealing true outliers performing ten to sixty times above average across India, the United States, and worldwide markets.
+
+[0:45 - 1:10] VOICE-FIRST COMMANDS & PLATFORM SELECTION
+Everything in Influgent is built voice-first with Wispr Flow. Instead of typing and clicking through menus, you can simply speak your creative intent. Tell Influgent to query live trends, or switch your target platform between YouTube Shorts, Instagram Reels, and LinkedIn, and the system executes your spoken commands instantly without touching the keyboard.
+
+[1:10 - 1:35] MULTI-PLATFORM AI SCRIPT GENERATION (YOUTUBE & LINKEDIN)
+When you select a breakout topic, Influgent crafts a platform-tailored creative package. Select YouTube for rapid-fire video hooks and spoken teleprompter scripts, or switch to LinkedIn for structured, long-form thought-leadership posts. Powered by Mistral AI, your voiceover is engineered specifically for natural speaking cadence, hooking viewers in the first three seconds.
+
+[1:35 - 2:00] STUDIO RECORDING & INSTANT PRODUCTION
+Finally, transition straight into the Content Studio to record. Launch the transparent teleprompter directly over your camera feed, maintain direct eye contact with your lens, and let the teleprompter scroll at your speaking pace. With five automated daily syncs keeping your pipeline fresh, turning a breakout trend into a recorded video takes less than two minutes.

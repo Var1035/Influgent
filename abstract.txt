@@ -1,0 +1,562 @@
+==============================================================================
+PROJECT ABSTRACT
+AI Trend and Content Suggestion Platform for Influencers
+(Working title: TrendPilot - rename as you like)
+==============================================================================
+
+Version     : 1.0 (MVP planning document)
+Date        : 28 October 2026
+Owner       : Varun
+Build tool  : Google Antigravity (agent-first IDE)
+Phase 1     : YouTube + Reddit
+Phase 2     : Instagram + Facebook (after Phase 1 is validated)
+Phase 3     : AI video editing for uploaded videos
+
+
+------------------------------------------------------------------------------
+1. PROJECT SUMMARY
+------------------------------------------------------------------------------
+
+Content creators spend hours every day deciding what to post. They scroll
+through YouTube, Reddit, Instagram and other platforms trying to guess which
+topics are rising, and by the time they act the trend has often peaked.
+
+This project is a web application that does that research automatically.
+An influencer selects the content categories they care about (for example
+fitness, food, tech, travel, gaming). Every day the system collects recent
+popular content for those categories from multiple platforms, uses AI to
+group the content into topics, measures which topics are rising fastest, and
+then produces ready-to-use content suggestions: the topic, why it is
+trending, a hook, a script outline, a caption, hashtags, and the best format
+and length.
+
+In Phase 1 the system uses two sources only: YouTube and Reddit. Once the
+suggestion quality is proven with real influencers, Instagram and Facebook
+are added, followed by AI-assisted video editing.
+
+
+------------------------------------------------------------------------------
+2. PROBLEM STATEMENT
+------------------------------------------------------------------------------
+
+- Creators do not have time to monitor many platforms every day.
+- Trend tools that exist are often expensive, generic, or only show what is
+  already popular, not what is about to become popular.
+- Knowing a topic is trending is not enough; creators also need a concrete
+  idea they can film today (hook, script, caption).
+- Small and mid-size creators, especially in India and regional-language
+  markets, are poorly served by existing tools.
+
+
+------------------------------------------------------------------------------
+3. OBJECTIVES
+------------------------------------------------------------------------------
+
+1. Collect trend data daily from YouTube and Reddit for user-selected
+   categories and for the overall (all categories) view.
+2. Use AI to turn raw posts into ranked topics with a momentum score.
+3. Generate specific, actionable content suggestions per influencer.
+4. Deliver results through a clean dashboard and a daily digest.
+5. Validate with 10 to 20 real influencers before expanding to more platforms.
+6. Keep every data source replaceable so that changes in platform access do
+   not break the product.
+
+
+------------------------------------------------------------------------------
+4. TARGET USERS
+------------------------------------------------------------------------------
+
+- Primary: individual influencers and short-video creators (YouTube Shorts,
+  Instagram Reels).
+- Secondary: small social media agencies managing several creators.
+- Later: brands looking for trending topics in a category.
+
+
+------------------------------------------------------------------------------
+5. SCOPE
+------------------------------------------------------------------------------
+
+5.1 IN SCOPE (MVP / Phase 1)
+- User registration and login
+- Category selection (preset list plus custom niches)
+- Daily YouTube trend collection (YouTube Data API)
+- Daily Reddit trend collection (through a third-party data provider)
+- Data cleaning and de-duplication
+- AI topic clustering and momentum scoring
+- AI content suggestion generation
+- Dashboard with trending topics per category and overall
+- Save / dismiss / mark-as-posted on suggestions
+- Daily email digest
+- Basic admin view to monitor data collection jobs
+
+5.2 OUT OF SCOPE FOR MVP (planned later)
+- Instagram and Facebook data collection
+- AI video editing and auto-publishing
+- Payments and subscription billing
+- Mobile app
+- Team and agency accounts
+
+
+------------------------------------------------------------------------------
+6. FUNCTIONAL REQUIREMENTS (DETAILED)
+------------------------------------------------------------------------------
+
+6.1 AUTHENTICATION AND PROFILE
+- Sign up and log in with email and password, plus Google sign-in.
+- Profile: name, main platform(s), language, audience region, niche notes.
+- Password reset by email.
+
+6.2 CATEGORY SELECTION
+- A preset list of categories (fitness, food, tech, travel, gaming, fashion,
+  finance, education, comedy, news, lifestyle, and more).
+- Users choose 1 to 5 categories in the MVP.
+- Users may add a custom niche keyword (for example "home workouts for
+  beginners"). Custom niches are mapped to search terms and relevant
+  subreddits.
+- Each category is mapped on the backend to: YouTube category IDs and search
+  keywords, a set of relevant subreddits, and optional extra keywords.
+
+6.3 DATA COLLECTION
+YouTube:
+- Most-popular videos by category and region.
+- Recent videos matching category keywords, sorted by view count and date.
+- Fields stored: video id, title, channel, published time, views, likes,
+  comment count, duration, tags, description, thumbnail URL, and a snapshot
+  time so growth can be measured between days.
+Reddit:
+- Top, hot and rising posts from the subreddits mapped to each category,
+  plus r/popular for the overall view.
+- Fields stored: post id, subreddit, title, body text (when public), score,
+  upvote ratio, comment count, created time, permalink, and snapshot time.
+- Collected through a provider (see section 9) and kept behind a replaceable
+  "source" module.
+Scheduling:
+- A daily job collects data for all categories that at least one user has
+  selected. A lighter job may run more often for fast-moving categories.
+
+6.4 CLEANING AND PREPARATION
+- Remove duplicates and reposts.
+- Remove spam, very low-quality or clearly irrelevant posts.
+- Remove posts older than the freshness window (for example 7 days).
+- Filter out NSFW and unsafe content.
+- Normalize all sources to one common format (platform, id, title, text,
+  engagement numbers, timestamps, url, category).
+
+6.5 AI ANALYSIS
+- Topic clustering: group similar posts and videos across platforms into
+  topics using text embeddings and clustering, then have the AI model name
+  and summarize each topic.
+- Momentum score: compare engagement between snapshots to estimate how fast
+  each topic is rising, not only how large it is. Cross-platform presence
+  (a topic rising on both YouTube and Reddit) increases the score.
+- Explanation: for each top topic, the AI writes a short "why this is
+  trending" note based only on the collected data.
+- Audience-question mining: extract common questions and pain points from
+  Reddit posts and YouTube comments to identify content gaps.
+
+6.6 SUGGESTION GENERATION
+For each influencer, each day, the system produces a ranked list of
+suggestions (for example 5 to 10). Every suggestion contains:
+- Topic and category
+- Why it is trending (with links to the supporting posts)
+- Suggested format (Short/Reel, long video, carousel, text post)
+- Recommended length
+- Hook (first 3 seconds)
+- Script outline (beginning, middle, end)
+- Caption and hashtags
+- Suggested posting window
+- Confidence / momentum indicator
+Personalization uses the influencer's categories, language, and feedback
+history (saved, dismissed, posted).
+
+6.7 DASHBOARD
+- Today's suggestions, sorted by momentum.
+- Trending topics per selected category.
+- Overall trending view across all categories.
+- Topic detail page with the source posts, charts of growth, and the
+  generated script.
+- Actions: save, dismiss, copy script/caption, mark as posted.
+- History of past suggestions.
+
+6.8 NOTIFICATIONS
+- Daily email digest with the top suggestions.
+- Optional WhatsApp or Telegram digest in a later iteration.
+
+6.9 ADMIN AND MONITORING
+- View of collection job status, number of posts collected per source, and
+  errors.
+- Cost tracker for data provider and AI usage.
+- Ability to enable or disable a data source.
+
+
+------------------------------------------------------------------------------
+7. NON-FUNCTIONAL REQUIREMENTS
+------------------------------------------------------------------------------
+
+- Reliability: if one source fails, the others still produce suggestions.
+- Replaceability: every platform is a plug-in module with the same interface.
+- Performance: dashboard pages load in under 3 seconds; daily pipeline
+  finishes within a fixed window (for example before 6 AM local time).
+- Security: secrets stored only in environment variables; passwords hashed;
+  HTTPS everywhere; per-user data isolation.
+- Cost control: caps on data pulled and AI tokens used per day.
+- Compliance: use public data only; do not store personal information of
+  platform users beyond what is needed; respect each platform's terms.
+- Scalability: start small, but design the database and jobs so the number
+  of categories and users can grow.
+
+
+------------------------------------------------------------------------------
+8. SYSTEM ARCHITECTURE
+------------------------------------------------------------------------------
+
+   +---------------------------+
+   |  Scheduler (daily jobs)   |
+   +-------------+-------------+
+                 |
+     +-----------+------------+
+     |                        |
+ +---v---------+      +-------v--------+
+ | YouTube     |      | Reddit source  |
+ | source      |      | (via provider) |
+ +---+---------+      +-------+--------+
+     |                        |
+     +-----------+------------+
+                 |
+        +--------v---------+
+        | Raw posts store  |
+        | (PostgreSQL)     |
+        +--------+---------+
+                 |
+        +--------v---------+
+        | Cleaning and     |
+        | normalization    |
+        +--------+---------+
+                 |
+        +--------v---------+
+        | AI analysis      |
+        | (embeddings,     |
+        | clustering,      |
+        | momentum score)  |
+        +--------+---------+
+                 |
+        +--------v---------+
+        | Suggestion       |
+        | generator (LLM)  |
+        +--------+---------+
+                 |
+   +-------------+--------------+
+   |                            |
++--v-----------+        +-------v-------+
+| REST API     |        | Email digest  |
+| (FastAPI)    |        +---------------+
++--+-----------+
+   |
++--v-----------+
+| Web frontend |
+| (Next.js)    |
++--------------+
+
+Layers:
+1. Ingestion layer     - source modules that fetch data
+2. Storage layer       - PostgreSQL for all structured data
+3. Processing layer    - cleaning, clustering, scoring
+4. AI layer            - topic naming, explanations, suggestions
+5. Application layer   - REST API and authentication
+6. Presentation layer  - web dashboard and email
+
+
+------------------------------------------------------------------------------
+9. TECHNOLOGY STACK AND TOOLS
+------------------------------------------------------------------------------
+
+DEVELOPMENT ENVIRONMENT
+- Google Antigravity (agent-first IDE) for building the project with
+  AI agents; Git and GitHub for version control.
+- A SPEC.md file in the repository (this abstract is its basis) so that
+  every agent works from the same plan.
+
+FRONTEND
+- Next.js (React) with TypeScript
+- Tailwind CSS for styling
+- A charting library (for example Recharts) for trend graphs
+
+BACKEND
+- Python 3.11+ with FastAPI
+- Pydantic for data validation
+- SQLAlchemy and Alembic for database access and migrations
+
+DATABASE
+- PostgreSQL (hosted option such as Supabase or Neon for the MVP)
+- pgvector extension (optional) for storing text embeddings
+
+DATA SOURCES
+- YouTube Data API v3 (official; free quota, needs an API key)
+- Reddit data through Apify (Reddit scraper actors; pay per result; free
+  plan includes $5 monthly credit). Kept behind a swappable module.
+  Official Reddit API access to be requested in parallel because commercial
+  use requires an agreement with Reddit.
+- Google Trends (optional extra signal)
+
+AI / ML
+- A large language model API for topic naming, explanations, and suggestion
+  writing (Claude API or Gemini API; the provider is kept replaceable)
+- Text embeddings and a clustering method (for example HDBSCAN or k-means)
+  for grouping posts into topics
+
+JOBS AND SCHEDULING
+- A scheduler (cron on the host, or a task queue such as Celery / RQ /
+  APScheduler) to run the daily pipeline
+
+AUTH AND EMAIL
+- Auth library or hosted auth (for example Supabase Auth or NextAuth)
+- Transactional email service (for example Resend or SendGrid)
+
+HOSTING AND DEVOPS
+- Frontend: Vercel (or similar)
+- Backend: a small cloud server or container platform (Render, Railway, or a
+  VPS)
+- Environment variables for all secrets; a .env.example file in the repo
+- Basic logging and error monitoring (for example Sentry free tier)
+
+TESTING
+- pytest for backend tests
+- Playwright or Antigravity's built-in browser checks for frontend flows
+
+
+------------------------------------------------------------------------------
+10. DATA MODEL (MAIN TABLES)
+------------------------------------------------------------------------------
+
+users
+  id, email, password_hash (or auth id), name, language, region, created_at
+
+categories
+  id, name, slug, youtube_category_id, keywords[], subreddits[]
+
+user_categories
+  user_id, category_id, custom_niche (optional)
+
+raw_posts
+  id, platform (youtube/reddit), external_id, category_id, title, body,
+  author_handle (public handle only, if needed), url, score, comments,
+  views, likes, published_at, collected_at
+
+post_snapshots
+  id, raw_post_id, score, comments, views, likes, snapshot_at
+  (used to calculate growth between days)
+
+topics
+  id, category_id, name, summary, momentum_score, platforms_present[],
+  created_for_date
+
+topic_posts
+  topic_id, raw_post_id
+
+suggestions
+  id, user_id, topic_id, format, length, hook, script_outline, caption,
+  hashtags[], best_time, status (new/saved/dismissed/posted), created_at
+
+feedback
+  id, suggestion_id, user_id, action, created_at
+
+job_runs
+  id, source, started_at, finished_at, items_collected, status, error,
+  cost_estimate
+
+
+------------------------------------------------------------------------------
+11. END-TO-END WORKFLOW
+------------------------------------------------------------------------------
+
+1. Influencer signs up and selects categories.
+2. System maps each category to YouTube keywords/IDs and subreddits.
+3. Daily at a fixed time the scheduler runs the ingestion jobs.
+4. YouTube and Reddit modules fetch data and save it with a snapshot time.
+5. Cleaning step removes duplicates, spam and old or unsafe content.
+6. Posts are embedded and clustered into topics.
+7. Momentum score is calculated using growth since the last snapshot and
+   presence on more than one platform.
+8. The LLM names each topic, explains why it is trending, and extracts
+   audience questions.
+9. For each user, the suggestion generator selects the best-fitting topics
+   and writes the hook, script outline, caption and hashtags.
+10. Suggestions appear on the dashboard and are sent in the email digest.
+11. The influencer saves, dismisses or marks suggestions as posted; this
+    feedback improves future ranking.
+
+
+------------------------------------------------------------------------------
+12. API OUTLINE (BACKEND)
+------------------------------------------------------------------------------
+
+POST   /auth/register
+POST   /auth/login
+GET    /me
+GET    /categories
+PUT    /me/categories
+GET    /trends?category=&date=
+GET    /trends/overall
+GET    /topics/{id}
+GET    /suggestions?date=
+PATCH  /suggestions/{id}            (save / dismiss / posted)
+GET    /admin/jobs                  (admin only)
+
+
+------------------------------------------------------------------------------
+13. PROJECT STRUCTURE (SUGGESTED)
+------------------------------------------------------------------------------
+
+trendpilot/
+  SPEC.md
+  README.md
+  .env.example
+  backend/
+    app/
+      main.py
+      config.py
+      db/            (models, migrations)
+      sources/       (base.py, youtube.py, reddit_apify.py)
+      pipeline/      (clean.py, cluster.py, score.py)
+      ai/            (topics.py, suggestions.py, prompts/)
+      api/           (routes)
+      jobs/          (daily_run.py)
+    tests/
+  frontend/
+    app/             (pages)
+    components/
+    lib/
+  docs/
+
+
+------------------------------------------------------------------------------
+14. DEVELOPMENT PLAN
+------------------------------------------------------------------------------
+
+PHASE 1 - Foundation (about 1 week)
+- Repository, environment, database schema, categories seed data
+- YouTube source module and a first working collection run
+
+PHASE 2 - Reddit (about 1 week)
+- Apify Reddit source module with the same interface as YouTube
+- Category-to-subreddit mapping; cost and volume limits
+
+PHASE 3 - AI layer (1 to 2 weeks)
+- Cleaning, embeddings, clustering, momentum score
+- Topic summaries and suggestion generation with prompt testing
+
+PHASE 4 - Application (1 to 2 weeks)
+- API, authentication, category picker, dashboard, topic pages
+- Email digest
+
+PHASE 5 - Launch test (about 1 week)
+- Deployment, monitoring, invite 10 to 20 influencers, collect feedback
+
+LATER PHASES
+- Instagram and Facebook sources (official APIs, own-account insights, or
+  licensed data providers)
+- AI video editing: automated cuts, captions, vertical resizing, music, and
+  hook selection, using FFmpeg plus AI decisions or an AI video API
+- Payments, team accounts, mobile app, WhatsApp digest
+
+(Timings are estimates for part-time work and may change.)
+
+
+------------------------------------------------------------------------------
+15. HOW TO BUILD IT IN ANTIGRAVITY
+------------------------------------------------------------------------------
+
+1. Create the project and add this abstract as SPEC.md.
+2. Work one phase at a time; give each agent one clear task and review the
+   output before the next task.
+3. Use parallel agents only after the base exists (for example backend and
+   frontend at the same time).
+4. Ask agents to write tests and to verify pages in the built-in browser.
+5. Commit to Git after every working step.
+6. Keep all keys in .env; never paste secrets into prompts.
+
+First task to give an agent:
+"Create the PostgreSQL schema from section 10 of SPEC.md, seed the category
+table, and build the YouTube source module that collects the most popular
+videos for a given category and stores them with a snapshot time."
+
+
+------------------------------------------------------------------------------
+16. ESTIMATED COSTS (EARLY STAGE)
+------------------------------------------------------------------------------
+
+- Apify (Reddit data): free $5 credit for testing; roughly $15 to $30 per
+  month for daily pulls across about 10 subreddits (prices vary by actor)
+- YouTube Data API: free within the daily quota
+- AI model usage: low at the start (a few hundred posts analyzed per day)
+- Hosting and database: free or low-cost tiers early on
+- Antigravity: free tier with usage quotas; paid plans available
+(Verify all prices on the providers' own pages before relying on them.)
+
+
+------------------------------------------------------------------------------
+17. RISKS AND MITIGATION
+------------------------------------------------------------------------------
+
+RISK: Reddit access changes (API approval, new restrictions).
+MITIGATION: Keep Reddit as a swappable module; apply for official access;
+use multiple providers if needed; reduce dependence by adding other signals
+such as Google Trends and YouTube comments.
+
+RISK: Platform terms of service and legal exposure.
+MITIGATION: Use public data only; avoid personal data; get legal advice
+before charging customers; prefer official or licensed sources over time.
+
+RISK: Trends are already peaking by the time they are detected.
+MITIGATION: Rank by growth rate between snapshots, not just by size.
+
+RISK: Generic or low-quality AI suggestions.
+MITIGATION: Ground every suggestion in collected posts, test prompts with
+real influencers, and use feedback to improve ranking.
+
+RISK: Cost overrun from data or AI usage.
+MITIGATION: Daily caps, cost tracking in the admin view, smaller test
+volumes first.
+
+RISK: Agent-written code containing errors or security gaps.
+MITIGATION: Tests, code review of each phase, secrets in environment
+variables, and Git history for easy rollback.
+
+
+------------------------------------------------------------------------------
+18. SUCCESS METRICS
+------------------------------------------------------------------------------
+
+- 10 to 20 influencers actively testing within the first month of launch
+- At least 30 percent of suggestions saved or posted
+- Daily pipeline success rate above 95 percent
+- Average cost per active user per month below a target set after testing
+- Qualitative feedback: "this saved me research time"
+
+
+------------------------------------------------------------------------------
+19. FUTURE ENHANCEMENTS
+------------------------------------------------------------------------------
+
+- Instagram and Facebook trend sources
+- AI video editing for uploaded videos (cuts, captions, vertical format)
+- Performance tracking of posted content to refine suggestions
+- Regional-language trend detection and script writing
+- Competitor and creator benchmarking
+- Subscription plans, team accounts, brand dashboard
+- Native mobile app
+
+
+------------------------------------------------------------------------------
+20. CONCLUSION
+------------------------------------------------------------------------------
+
+The project combines trend data from YouTube and Reddit with AI analysis to
+tell influencers what to post and how to post it. Starting with two sources,
+a small tested group of users and a modular design keeps cost and risk low,
+while leaving room to add Instagram, Facebook and video editing once the
+core idea is proven.
+
+==============================================================================
+END OF DOCUMENT
+==============================================================================

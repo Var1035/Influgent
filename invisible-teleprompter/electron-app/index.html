@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Influgent Stealth Teleprompter</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    crossorigin="anonymous"
+  />
+</head>
+<body class="teleprompter-body">
+  <div class="prompter-window-container" id="windowContainer">
+    <!-- 1. Draggable Top Header -->
+    <header class="prompter-drag-bar">
+      <div class="drag-title-wrap">
+        <i class="fa-solid fa-microphone-lines"></i>
+        <span class="drag-title">Influgent Stealth Teleprompter</span>
+        <span class="stealth-shield-badge" id="shieldBadge" title="Hidden from OBS, Zoom, Teams, Loom & Screen Captures">
+          <i class="fa-solid fa-shield-halved"></i> Stealth Capture Protection: Active
+        </span>
+      </div>
+
+      <div class="window-actions-group">
+        <button type="button" class="win-btn" id="hideToolbarBtn" title="Toggle Bottom Toolbar">
+          <i class="fa-solid fa-sliders"></i>
+        </button>
+        <button type="button" class="win-btn" id="minimizeBtn" title="Minimize">
+          <i class="fa-solid fa-minus"></i>
+        </button>
+        <button type="button" class="win-btn close-btn" id="closeBtn" title="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. Main Scrolling Teleprompter Viewport -->
+    <main class="prompter-scroll-viewport" id="viewport">
+      <!-- Horizontal Focus Marker Strip -->
+      <div class="reading-focus-marker" id="focusMarker">
+        <span class="focus-marker-pointer">&#9658;</span>
+      </div>
+
+      <!-- Live Countdown Overlay -->
+      <div class="countdown-overlay hidden" id="countdownOverlay">
+        <div class="countdown-number" id="countdownNumber">3</div>
+        <div class="countdown-sub">Get ready to speak...</div>
+      </div>
+
+      <!-- Flowing Script Text -->
+      <div class="script-scroll-content" id="scriptContent">
+        <!-- Rendered by JS -->
+      </div>
+    </main>
+
+    <!-- 3. Interactive Floating Control Bar -->
+    <footer class="prompter-controls-bar" id="controlsBar">
+      <div class="controls-left">
+        <button type="button" class="ctrl-btn primary" id="playBtn">
+          <i class="fa-solid fa-play" id="playIcon"></i>
+          <span id="playLabel">Start [Space]</span>
+        </button>
+        <button type="button" class="ctrl-btn" id="rewindBtn" title="Rewind to Top (R)">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span>Rewind</span>
+        </button>
+
+        <!-- Speed Adjuster -->
+        <div class="pill-group">
+          <button type="button" class="pill-btn" id="speedDownBtn" title="Speed Down (Down Arrow)">-</button>
+          <span class="pill-display" id="speedDisplay">1.2x</span>
+          <button type="button" class="pill-btn" id="speedUpBtn" title="Speed Up (Up Arrow)">+</button>
+        </div>
+
+        <!-- Font Size Adjuster -->
+        <div class="pill-group">
+          <button type="button" class="pill-btn" id="fontDownBtn" title="Smaller Font (Minus)">A-</button>
+          <button type="button" class="pill-btn" id="fontUpBtn" title="Larger Font (Plus)">A+</button>
+        </div>
+
+        <!-- Opacity Adjuster -->
+        <button type="button" class="ctrl-btn" id="opacityBtn" title="Cycle Glass Transparency">
+          <i class="fa-solid fa-eye"></i>
+          <span id="opacityLabel">Glass 88%</span>
+        </button>
+
+        <button type="button" class="ctrl-btn accent" id="editScriptBtn">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span>Edit Script</span>
+        </button>
+      </div>
+
+      <div class="controls-right">
+        <span class="stats-text" id="statsDisplay">260 words • ~2m 00s</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 4. Script Editor Modal -->
+  <div class="editor-modal-backdrop hidden" id="editorModal">
+    <div class="editor-modal-card">
+      <div class="editor-modal-header">
+        <h3><i class="fa-solid fa-file-lines"></i> Edit Teleprompter Script</h3>
+        <button type="button" class="modal-close-btn" id="closeModalBtn">&times;</button>
+      </div>
+      <div class="editor-modal-body">
+        <p class="editor-hint">Paste your script below. Pacing is calculated at a natural 130 words per minute.</p>
+        <textarea id="scriptTextarea" rows="12" placeholder="Paste your voiceover script here..."></textarea>
+      </div>
+      <div class="editor-modal-footer">
+        <button type="button" class="ctrl-btn" id="loadDemoScriptBtn">
+          <i class="fa-solid fa-sparkles"></i> Load 2-Min Demo Script
+        </button>
+        <div class="modal-actions-right">
+          <button type="button" class="ctrl-btn" id="cancelModalBtn">Cancel</button>
+          <button type="button" class="ctrl-btn primary" id="applyScriptBtn">Apply &amp; Rewind</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
+

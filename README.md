@@ -123,8 +123,26 @@ To run the capture-proof teleprompter during video recordings or live demos:
    ```
 
 ---
+# Proprietary License – All Rights Reserved
 
-## License
+Copyright (c) 2026 Varun Kumar. All Rights Reserved.
 
-This project is licensed under the MIT License.
+This project and its source code are publicly available for viewing and reference purposes only.
+
+No person or organization is permitted to:
+
+- Copy or reuse this source code.
+- Modify or create derivative works.
+- Distribute or redistribute this project.
+- Use this project for commercial purposes.
+- Reproduce or republish any part of this project.
+
+Any such use requires prior written permission from the copyright owner.
+
+Viewing this repository does not grant any rights to use, modify, distribute, or commercially exploit the source code.
+
+For permission or licensing inquiries, contact the repository owner.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+
 
